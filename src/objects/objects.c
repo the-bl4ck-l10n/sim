@@ -20,7 +20,7 @@ Objects objects_init(Tile map[MAP_ROWS][MAP_COLS]) {
 
 void objects_add(Objects* objects, Object object) {
     if (objects->len == objects->cap) {
-        objects->objects = (Object*) realloc(objects->objects, sizeof (Object) * OBJ_REALLOC_RATE);
+        objects->objects = (Object*) realloc(objects->objects, sizeof (Object) * (objects->cap + OBJ_REALLOC_RATE));
         objects->cap += OBJ_REALLOC_RATE;
     }
     objects->objects[objects->len] = object;
