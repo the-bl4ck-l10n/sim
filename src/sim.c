@@ -1,11 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include <ncurses.h>
 
 #include "../include/settings.h"
 #include "../include/world/world.h"
 #include "../include/objects/objects.h"
+#include "../include/interface/interface.h"
 
 int main(void) {
     Tile map[MAP_ROWS][MAP_COLS];
@@ -13,39 +13,38 @@ int main(void) {
 
     Objects objects = objects_init(map);
 
-    initscr();
-    noecho();
+    WINDOW* w = interface_init();
+    Canvas canvas = canvas_init(w);
 
-    while (true) {
-        clear();
+    bool running = true;
 
-        for (int i = 0; i < MAP_ROWS; i++) {
-            for (int j = 0; j < MAP_COLS; j++) {
-                move(i, j);
-                switch (map[i][j].kind) {
-                    case Water:
-                        printw("~");
-                        break;
-                    case Grass:
-                        printw("\"");
-                        break;
-                    default:
-                        printw("?");
-                        break;
-                }
-            }
-        }
-
-        refresh();
+    while (running) {
+        canvas_update(&canvas);
+        canvas_draw(&canvas, map, &objects);
 
         char k = getch();
         if (k == 'q') {
-            break;
+            running = false;
+        } else if (k == 'w') {
+            if (canvas.map_pos_row > 0) {
+                canvas.map_pos_row -= 1;
+            }
+        } else if (k == 'a') {
+            if (canvas.map_pos_col > 0) {
+                canvas.map_pos_col -= 1;
+            }
+        } else if (k == 's') {
+            if (canvas.map_pos_row + canvas.height < MAP_ROWS) {
+                canvas.map_pos_row += 1;
+            }
+        } else if (k == 'd') {
+            if (canvas.map_pos_col + canvas.width < MAP_COLS) {
+                canvas.map_pos_col += 1;
+            }
         }
     }
 
-    endwin();
-
+    interface_deinit();
     objects_deinit(&objects);
     return 0;
 }
