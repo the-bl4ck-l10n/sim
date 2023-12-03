@@ -1,5 +1,6 @@
 #include "../../include/objects/objects.h"
 #include <stdlib.h>
+#include <time.h>
 
 Objects objects_init(Tile map[MAP_ROWS][MAP_COLS]) {
     Objects objects;
@@ -8,10 +9,16 @@ Objects objects_init(Tile map[MAP_ROWS][MAP_COLS]) {
     objects.cap = OBJ_INITIAL_CAP;
     objects.highest_id = 0;
 
+    srand(time(NULL));
+
     for (int i = 0; i < MAP_ROWS; i++) {
         for (int j = 0; j < MAP_COLS; j++) {
-            Object o = object_create(i, j, objects.highest_id, Tree);
-            objects_add(&objects, o);
+            if (map[i][j].kind == Grass) {
+                if ((rand() % 100 + 1) < SPAWN_RATE_TREE) {
+                    Object o = object_create(i, j, objects.highest_id, Tree);
+                    objects_add(&objects, o);
+                }
+            }
         }
     }
 

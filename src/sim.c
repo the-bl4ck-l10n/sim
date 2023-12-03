@@ -1,7 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdbool.h>
-
 #include "../include/settings.h"
 #include "../include/world/world.h"
 #include "../include/objects/objects.h"
@@ -13,34 +9,58 @@ int main(void) {
 
     Objects objects = objects_init(map);
 
+    // TODO: generate a more intricate world
+
+    // TODO: implement entities
+
+    // TODO: implement structures
+
+    // TODO: implement colors
+    // TODO: implement message feed
     WINDOW* w = interface_init();
     Canvas canvas = canvas_init(w);
+
+    int sim_steps = 1;
 
     bool running = true;
 
     while (running) {
         canvas_update(&canvas);
+        // TODO: draw ui (message feed, tooltip bar, sidebar)
         canvas_draw(&canvas, map, &objects);
 
-        char k = getch();
-        if (k == 'q') {
-            running = false;
-        } else if (k == 'w') {
-            if (canvas.map_pos_row > 0) {
-                canvas.map_pos_row -= 1;
-            }
-        } else if (k == 'a') {
-            if (canvas.map_pos_col > 0) {
-                canvas.map_pos_col -= 1;
-            }
-        } else if (k == 's') {
-            if (canvas.map_pos_row + canvas.height < MAP_ROWS) {
-                canvas.map_pos_row += 1;
-            }
-        } else if (k == 'd') {
-            if (canvas.map_pos_col + canvas.width < MAP_COLS) {
-                canvas.map_pos_col += 1;
-            }
+        // TODO: implement state logic (global variables? enum?)
+
+        Input input = get_input();
+        switch (input) {
+            case Up:
+                if (canvas.map_offset_rows > 0) {
+                    canvas.map_offset_rows -= 1;
+                }
+                break;
+            case Left:
+                if (canvas.map_offset_cols > 0) {
+                    canvas.map_offset_cols -= 1;
+                }
+                break;
+            case Down:
+                if (canvas.map_offset_rows + canvas.map_height < MAP_ROWS) {
+                    canvas.map_offset_rows += 1;
+                }
+                break;
+            case Right:
+                if (canvas.map_offset_cols + canvas.map_width < MAP_COLS) {
+                    canvas.map_offset_cols += 1;
+                }
+                break;
+            case Space:
+                // TODO: next sim step(s)
+                break;
+            case Back:
+                running = false;
+                break;
+            case ParseError:
+                break;
         }
     }
 
