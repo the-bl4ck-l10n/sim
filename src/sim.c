@@ -4,10 +4,10 @@
 #include "../include/interface/interface.h"
 
 int main(void) {
-    Tile map[MAP_ROWS][MAP_COLS];
-    map_create(map);
+    Map map = map_init(MAP_ROWS, MAP_COLS);
+    map_create(&map);
 
-    Objects objects = objects_init(map);
+    Objects objects = objects_init(&map);
 
     // TODO: generate a more intricate world
 
@@ -27,7 +27,7 @@ int main(void) {
     while (running) {
         canvas_update(&canvas);
         // TODO: draw ui (message feed, tooltip bar, sidebar)
-        canvas_draw(&canvas, map, &objects);
+        canvas_draw(&canvas, &map, &objects);
 
         // TODO: implement state logic (global variables? enum?)
 

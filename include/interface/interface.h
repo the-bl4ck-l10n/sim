@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <ncurses.h>
 
-#include "../settings.h"
 #include "../world/world.h"
 #include "../objects/objects.h"
 
@@ -44,8 +43,8 @@ MainMenuExitCode main_menu();
 
 Canvas canvas_init(WINDOW* main_window);
 void canvas_update(Canvas* canvas);
-void canvas_draw(Canvas* canvas, Tile map[MAP_ROWS][MAP_COLS], Objects* objects);
-void canvas_draw_map(Canvas* canvas, Tile map[MAP_ROWS][MAP_COLS]);
+void canvas_draw(Canvas* canvas, Map* map, Objects* objects);
+void canvas_draw_map(Canvas* canvas, Map* map);
 void canvas_draw_objects(Canvas* canvas, Objects* objects);
 
 Input get_input();

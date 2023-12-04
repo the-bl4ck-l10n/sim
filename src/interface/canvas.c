@@ -36,14 +36,14 @@ void canvas_update(Canvas* canvas) {
     canvas->map_width = max_x;
 }
 
-void canvas_draw(Canvas* canvas, Tile map[MAP_ROWS][MAP_COLS], Objects* objects) {
+void canvas_draw(Canvas* canvas, Map* map, Objects* objects) {
     clear();
     canvas_draw_map(canvas, map);
     canvas_draw_objects(canvas, objects);
     refresh();
 }
 
-void canvas_draw_map(Canvas* canvas, Tile map[MAP_ROWS][MAP_COLS]) {
+void canvas_draw_map(Canvas* canvas, Map* map) {
     int start_pos_row = canvas->map_pos_row;
     int start_pos_col = canvas->map_pos_col;
 
@@ -56,7 +56,7 @@ void canvas_draw_map(Canvas* canvas, Tile map[MAP_ROWS][MAP_COLS]) {
     for (int i = start_pos_row; i < height; i++) {
         for (int j = start_pos_col; j < width; j++) {
             move(i, j);
-            switch (map[i + offset_rows][j + offset_cols].kind) {
+            switch (map->tiles[i + offset_rows][j + offset_cols].kind) {
                 case Water:
                     printw("~");
                     break;

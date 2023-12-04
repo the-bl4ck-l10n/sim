@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-Objects objects_init(Tile map[MAP_ROWS][MAP_COLS]) {
+Objects objects_init(Map* map) {
     Objects objects;
     objects.objects = (Object*) malloc(sizeof (Object) * OBJ_INITIAL_CAP);
     objects.len = 0;
@@ -11,9 +11,9 @@ Objects objects_init(Tile map[MAP_ROWS][MAP_COLS]) {
 
     srand(time(NULL));
 
-    for (int i = 0; i < MAP_ROWS; i++) {
-        for (int j = 0; j < MAP_COLS; j++) {
-            if (map[i][j].kind == Grass) {
+    for (int i = 0; i < map->rows; i++) {
+        for (int j = 0; j < map->cols; j++) {
+            if (map->tiles[i][j].kind == Grass) {
                 if ((rand() % 100 + 1) < SPAWN_RATE_TREE) {
                     Object o = object_create(i, j, objects.highest_id, Tree);
                     objects_add(&objects, o);

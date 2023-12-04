@@ -4,6 +4,14 @@
 #include "../settings.h"
 #include "./tile.h"
 
-void map_create(Tile map[MAP_ROWS][MAP_COLS]);
+typedef struct{
+    Tile** tiles;
+    int rows;
+    int cols;
+}Map;
+
+Map map_init(int rows, int cols);
+void map_deinit(Map* map);
+void map_create(Map* map);
 
 #endif

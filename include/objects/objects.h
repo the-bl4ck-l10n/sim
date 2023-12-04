@@ -1,8 +1,7 @@
 #ifndef OBJECTS_H
 #define OBJECTS_H
 
-#include "../settings.h"
-#include "../world/tile.h"
+#include "../world/world.h"
 
 typedef enum{
     Tree,
@@ -28,7 +27,7 @@ typedef struct{
     int highest_id;
 }Objects;
 
-Objects objects_init(Tile map[MAP_ROWS][MAP_COLS]);
+Objects objects_init(Map* map);
 void objects_add(Objects* objects, Object object);
 void objects_remove(Objects* objects, int id);
 void objects_deinit(Objects* objects);
