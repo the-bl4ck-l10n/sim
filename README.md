@@ -46,4 +46,4 @@ For more information about `sim` itself, see `MANUAL.md`.
 
 ## Author
 
-the-bl4ck-l10n (creator and maintainer)
+Leon Zanker (creator and maintainer)
