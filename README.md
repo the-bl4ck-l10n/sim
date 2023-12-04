@@ -12,8 +12,10 @@
 ## Installation
 
 For the installation, you will need the following:
-- A C compiler (e.g. `gcc`, `clang`)
-- `make`
+- A C compiler (e.g. `gcc`, `clang`; you most likely have one of them already installed on your system, but any C compiler will do)
+- `make` (available on Linux, macOS and Windows)
+- `pkg-config` (available on Linux, macOS and Windows)
+- The `ncurses` library ([installation on Linux](https://www.cyberciti.biz/faq/linux-install-ncurses-library-headers-on-debian-ubuntu-centos-fedora/))
 
 1. Clone the repo and move into it:
     ```sh
@@ -26,12 +28,11 @@ For the installation, you will need the following:
     ```
 3. Profit.
 
-If you are using `clang` or something else as your preferred compiler, change the `CC` variable in the Makefile to refer to it before running `make`.
-You may also have to configure the `LIBS` and `INCLUDES` variables to use the shell command to get the correct flags for your compiler on your system.
+If you are using `clang` or some other compiler as your preferred one, change the `CC` variable in the Makefile to refer to it before running `make`.
 
 ## Usage
 
-After compilation, the binary can be found in the `bin` directory. If you want to access `sim` from anywhere in your command line, copy or move it to a directory that is in your `PATH`. Alternatively, you can add an alias to your shell startup script:
+After compilation, the binary can be found in the `bin` directory. If you want to access `sim` from anywhere in your command line, copy or move it to a directory that is in your `PATH`. On Unix, alternatively, you can add an alias to your shell startup script:
 
 ```zsh
 # ~/.zshrc
