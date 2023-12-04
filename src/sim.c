@@ -65,6 +65,7 @@ int main(void) {
     }
 
     interface_deinit();
+    map_deinit(&map);
     objects_deinit(&objects);
     return 0;
 }
