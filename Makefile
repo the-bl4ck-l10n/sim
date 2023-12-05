@@ -4,7 +4,7 @@
 EXE := test
 
 # space-separated list of dependencies
-DEPS :=
+DEPS := ncurses
 
 # compiler
 CC := gcc
