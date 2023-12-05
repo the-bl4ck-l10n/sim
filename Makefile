@@ -3,57 +3,45 @@
 # name for the binary executable
 EXE := sim
 
-# space-separated list of dependencies
-DEPS := ncurses
+# space-separated list of library dependencies to search with pkg-config
+SYS_DEPS := ncurses
+
+# space-separated list of local static libraries in the lib folder
+LOC_DEPS :=
 
 # compiler
 CC := gcc
 
 # compiler flags
-CF := -Wall
+CF := -Wall -Werror -Wextra
 
-# ------------------------------------------------
+# -------------------------------------------------
 
-# create directories if not present already
-$(shell mkdir -p build)
 $(shell mkdir -p bin)
+$(shell mkdir -p build)
+$(shell mkdir -p include)
+$(shell mkdir -p lib)
+$(shell mkdir -p src)
+SRCS := $(wildcard src/**/*.c) $(wildcard src/*.c)
+OBJS := $(patsubst src/%.c, build/%.o, $(SRCS))
+S_LIBS := $(foreach dep, $(SYS_DEPS), $(shell pkg-config --libs $(dep)))
+S_INCL := $(foreach dep, $(SYS_DEPS), $(shell pkg-config --cflags $(dep)))
+USR_LIBS := $(foreach dep, $(LOC_DEPS), -l$(dep))
+USR_LIB_PATH := -Llib
 
-# get source and object file paths
-SRCS = $(wildcard src/**/*.c) $(wildcard src/*.c)
-OBJS = $(patsubst src/%.c, build/%.o, $(SRCS))
-
-# get compiler flags for dependencies
-LIBS := $(foreach dep, $(DEPS), $(shell pkg-config --libs $(dep)))
-INCL := $(foreach dep, $(DEPS), $(shell pkg-config --cflags $(dep)))
-
-# Compilation ------------------------------------
-
-# target
 all: bin/$(EXE)
 
-# linking
 bin/$(EXE): $(OBJS)
-	$(CC) $(CF) -Iinclude $^ -o $@ $(LIBS)
+	$(CC) $(CF) -Iinclude $^ $(USR_LIB_PATH) $(USR_LIBS) -o $@ $(S_LIBS)
 
-# compiling
 build/%.o: src/%.c
-	@mkdir -p $(dir $@)
-	$(CC) -c $(CF) -Iinclude $(INCL) $< -o $@
+	@mkdir -p $(dir \$@)
+	$(CC) -c $(CF) -Iinclude $(S_INCL) $< -o $@
 
-# Commands ---------------------------------------
-
-# run the executable
 run:
 	./bin/$(EXE)
 
-# clean the project directory
 clean:
 	rm -rf build bin
 
-# ------------------------------------------------
-
 .PHONY: all run clean
-
-# DISCLAIMER: 	this Makefile will not work if the
-# 				src directory has more than one level
-# 				of subdirectories
