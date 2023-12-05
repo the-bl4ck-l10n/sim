@@ -1,39 +1,59 @@
-EXE := sim
+# Settings ---------------------------------------
 
-LIBS := $(shell pkg-config --libs ncurses)
-INCLUDES := $(shell pkg-config --cflags ncurses)
+# name for the binary executable
+EXE := test
 
+# space-separated list of dependencies
+DEPS :=
+
+# compiler
 CC := gcc
-CFLAGS := -Wall -Iinclude
 
-SRC_DIR := src
-BUILD_DIR := build
-BIN_DIR := bin
+# compiler flags
+CF := -Wall
 
-$(shell mkdir -p $(BUILD_DIR))
-$(shell mkdir -p $(BIN_DIR))
+# ------------------------------------------------
 
-SRC_FILES := $(wildcard $(SRC_DIR)/**/*.c $(SRC_DIR)/*.c)
+# create directories if not present already
+$(shell mkdir -p build)
+$(shell mkdir -p bin)
 
-OBJ_FILES := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRC_FILES))
+# get source and object file paths
+SRCS = $(wildcard src/**/*.c) $(wildcard src/*.c)
+OBJS = $(patsubst src/%.c, build/%.o, $(SRCS))
 
-SRC_SUBDIRS := $(wildcard $(SRC_DIR)/*)
+# get compiler flags for dependencies
+LIBS := $(foreach dep, $(DEPS), $(shell pkg-config --libs $(dep)))
+INCL := $(foreach dep, $(DEPS), $(shell pkg-config --cflags $(dep)))
 
-BUILD_SUBDIRS := $(patsubst $(SRC_DIR)/%, $(BUILD_DIR)/%, $(SRC_SUBDIRS))
-$(shell mkdir -p $(BUILD_SUBDIRS))
+# Compilation ------------------------------------
 
-all: $(BIN_DIR)/$(EXE)
+# target
+all: bin/$(EXE)
 
-$(BIN_DIR)/$(EXE): $(OBJ_FILES)
-	$(CC) $^ -o $@ $(LIBS)
+# linking
+bin/$(EXE): $(OBJS)
+	$(CC) $(CF) -Iinclude $^ -o $@ $(LIBS)
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+# compiling
+build/%.o: src/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -c $(CF) -Iinclude $(INCL) $< -o $@
 
+# Commands ---------------------------------------
+
+# run the executable
 run:
-	./$(BIN_DIR)/$(EXE)
+	./bin/$(EXE)
 
+# clean the project directory
 clean:
-	rm -rf $(BUILD_DIR)/* $(BIN_DIR)/*
+	rm -rf build bin
 
-.PHONY: all run clean 
+# ------------------------------------------------
+
+.PHONY: all run clean
+
+# DISCLAIMER: 	this Makefile will not work if the
+# 				src directory has more than one level
+# 				of subdirectories
