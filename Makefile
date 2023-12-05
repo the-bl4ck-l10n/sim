@@ -1,7 +1,7 @@
 # Settings ---------------------------------------
 
 # name for the binary executable
-EXE := test
+EXE := sim
 
 # space-separated list of dependencies
 DEPS := ncurses
